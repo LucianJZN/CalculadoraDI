@@ -25,8 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,16 +54,16 @@ fun Resultado(resultado: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .size(100.dp)
-            .background(Color.Red, shape = RectangleShape)
-            .border(2.dp, Color.Blue, RoundedCornerShape(8.dp)) // Aplicar borde
+            .size(200.dp)
+            .background(Color.White, shape = RoundedCornerShape(12.dp))
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(12.dp)) // Aplicar borde
     ) {
         Text(
             text = resultado,
             modifier = Modifier.align(Alignment.Center), // Centrar vertical y horizontalmente
             textAlign = TextAlign.Center, // Centrar el texto
             fontSize = 45.sp, // Tamaño de la fuente
-            color = Color.White // Color del texto (opcional)
+            color = Color(0xFF4B4B4B) // Color del texto (opcional)
         )
     }
 }
@@ -71,10 +73,10 @@ fun Boton(name: String, onClick: () -> Unit) {
     TextButton(
         onClick  = onClick,
         modifier = Modifier
-            .width(70.dp)  // Ancho del botón
+            .width(80.dp)  // Ancho del botón
             .height(150.dp)  // Alto del botón
-            .border(2.dp, Color.Blue, RoundedCornerShape(8.dp)) // Aplicar borde
-            .background(Color.Red, shape = RectangleShape)
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(12.dp)) // Aplicar borde
+            .background(Color.Gray, shape = RoundedCornerShape(12.dp))
     ) {
         Text(
             text = name,
@@ -84,16 +86,14 @@ fun Boton(name: String, onClick: () -> Unit) {
     }
 }
 @Composable
-fun BotonSpecial(name: String) {
+fun BotonSpecial(name: String, onClick: () -> Unit) {
     TextButton(
-        onClick = {
-
-        },
+        onClick  = onClick,
         modifier = Modifier
-            .width(70.dp)  // Ancho del botón
+            .width(80.dp)  // Ancho del botón
             .height(150.dp)  // Alto del botón
-            .border(2.dp, Color.Blue, RoundedCornerShape(8.dp)) // Aplicar borde
-            .background(Color.Red, shape = RectangleShape)
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(12.dp)) // Aplicar borde
+            .background(Color(0xFF4B4B4B), shape = RoundedCornerShape(12.dp))
     ) {
         Text(
             text = name,
@@ -102,61 +102,40 @@ fun BotonSpecial(name: String) {
         )
     }
 }
-@Composable
-fun Calculadora() {
-    // Estado para el resultado
-    val resultado = remember { mutableStateOf("") }
-
-    // Composable para mostrar el resultado
-    Resultado(resultado.value)
-
-    // Composables para los botones
-    // Ejemplo de botón "1"
-    Boton(name = "1") { resultado.value += "1" }
-    Boton(name = "2") { resultado.value += "2" }
-    Boton(name = "3") { resultado.value += "3" }
-    Boton(name = "4") { resultado.value += "4" }
-    Boton(name = "5") { resultado.value += "5" }
-    Boton(name = "6") { resultado.value += "6" }
-    Boton(name = "7") { resultado.value += "7" }
-    Boton(name = "8") { resultado.value += "8" }
-    Boton(name = "9") { resultado.value += "9" }
-    Boton(name = "0") { resultado.value += "0" }
-    Boton(name = "+") { resultado.value += "+" }
-    Boton(name = "-") { resultado.value += "-" }
-    Boton(name = "/") { resultado.value += "/" }
-    Boton(name = "*") { resultado.value += "*" }
-    Boton(name = "=") { resultado.value += "=" }
-    // Puedes agregar más botones según sea necesario
-}
 
 @Composable
-fun VistaGeneral() {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.SpaceEvenly) {
-        Resultado("123")
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            Boton("7"){ resultado.value += "1" }
-            Boton("4")
-            Boton("1")
-            Boton("0")
+fun VistaGeneral() {var resultado by remember { mutableStateOf("") }
+    Column(modifier = Modifier.padding(0.dp,10.dp,0.dp,0.dp)
+        .fillMaxSize()
+        .padding(10.dp), verticalArrangement = Arrangement.SpaceEvenly) {
+        Resultado(resultado = resultado)
+        Row(modifier = Modifier.padding(0.dp,15.dp,0.dp,0.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            Boton(name = "7", onClick = {resultado+="7"}) //{ resultado.value += "1" }
+            Boton(name = "8", onClick = {resultado+="8"})
+            Boton(name = "9", onClick = {resultado+="9"})
+            Boton(name = "0", onClick = {resultado+="0"})
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            Boton("8")
-            Boton("5")
-            Boton("2")
-            Boton("C")
+        Row(modifier = Modifier.padding(0.dp,15.dp,0.dp,0.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            Boton(name = "4", onClick = {resultado+="4"})
+            Boton(name = "5", onClick = {resultado+="5"})
+            Boton(name = "6", onClick = {resultado+="6"})
+            BotonSpecial(name = "C", onClick = {
+                if (resultado.isNotEmpty()) {
+                    resultado = resultado.dropLast(1)
+                }
+            })
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            Boton("9")
-            Boton("6")
-            Boton("3")
-            Boton("*")
+        Row(modifier = Modifier.padding(0.dp,15.dp,0.dp,0.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            Boton(name = "1", onClick = {resultado+="1"})
+            Boton(name = "2", onClick = {resultado+="2"})
+            Boton(name = "3", onClick = {resultado+="3"})
+            BotonSpecial(name = "*", onClick = {resultado+="*"})
         }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-            Boton("-")
-            Boton("+")
-            Boton("/")
-            Boton("=")
+        Row(modifier = Modifier.padding(0.dp,15.dp,0.dp,0.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            BotonSpecial(name = "-", onClick = {resultado+="-"})
+            BotonSpecial(name = "+", onClick = {resultado+="+"})
+            BotonSpecial(name = "/", onClick = {resultado+="/"})
+            BotonSpecial(name = "=", onClick = {resultado+="="})
         }
     }
 }
